@@ -1,28 +1,6 @@
 describe('Login spec', () => {
   it('Login successfull', () => {
-    cy.visit('/login')
-
-    cy.intercept('POST', '/api/auth/login', {
-      body: {
-        id: 1,
-        username: 'userName',
-        firstName: 'firstName',
-        lastName: 'lastName',
-        admin: true
-      },
-    })
-
-    cy.intercept(
-      {
-        method: 'GET',
-        url: '/api/session',
-      },
-      []).as('session')
-
-    cy.get('input[formControlName=email]').type("yoga@studio.com")
-    cy.get('input[formControlName=password]').type(`${"test!1234"}{enter}{enter}`)
-
-    cy.url().should('include', '/sessions')
+    cy.login()
   })
 
   it('Login failed', () => {
@@ -34,9 +12,6 @@ describe('Login spec', () => {
         message: 'An error occurred'
       },
     }).as('loginFail')
-  
-    // Interception de l'appel GET session (optionnelle si elle n'est pas faite en cas d'échec)
-    // cy.intercept('GET', '/api/session', []).as('session')
   
     // Remplir les champs avec de mauvaises infos
     cy.get('input[formControlName=email]').type("wrong@user.com")
